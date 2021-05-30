@@ -1,0 +1,49 @@
+{
+    "strategies": [
+        {
+            "id": "1",
+            "name": "Scatter",
+            "value": "ScatterStrategy()"
+        },
+        {
+            "id": "2",
+            "name": "ScatterReg",
+            "value": "ScatterRegStrategy()"
+        },
+        {
+            "id": "3",
+            "name": "Line",
+            "value": "LineStrategy()"
+        },
+        {
+            "id": "4",
+            "name": "Bar",
+            "value": "BarStrategy()"
+        },
+        {
+            "id": "5",
+            "name": "Histogram",
+            "value": "HistStrategy()"
+        },
+        {
+            "id": "6",
+            "name": "Correlogram",
+            "value": "CorrelogramStrategy()"
+        },
+        {
+            "id": "7",
+            "name": "Box",
+            "value": "BoxStrategy()"
+        },
+        {
+            "id": "8",
+            "name": "Density",
+            "value": "DensityStrategy()"
+        },
+        {
+            "id": "9",
+            "name": "Violin",
+            "value": "ViolinStrategy()"
+        }
+    ]
+}
