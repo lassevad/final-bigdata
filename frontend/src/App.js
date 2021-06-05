@@ -14,7 +14,7 @@ function App() {
     <div className="App" style={{ backgroundImage: `url(${background})`}}>
       <header className="App-header">
         <h1>
-          Graphalicious
+          Golfalicious
         </h1>
         <Box class="flexbox-container">
           <GraphService/>

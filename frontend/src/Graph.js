@@ -242,7 +242,7 @@ class GraphService extends React.Component {
 
     render() {
         return (
-            <div class="graph">
+            <div className="graphBack">
                 <h4>
                     Plot a graph!
                 </h4>

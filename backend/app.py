@@ -157,6 +157,7 @@ def generate_K_graph():
     unsupervise(Xcol, Ycol, K)
 
     fig = kplot()
+
     filename = "k.png"
     try:
         os.remove(filename)
@@ -164,7 +165,7 @@ def generate_K_graph():
         pass
 
     fig.figure.savefig("k.png")
-
+    plt.clf()
     return send_file('k.png', mimetype='image/gif')
 
 
@@ -266,7 +267,11 @@ def upload_new():
     newInput = li
     global ynew
     ynew = new(newInput).tolist()
-
+    print(ynew)
+    groupnames = gn()
+    print("HEIHEI")
+    print(groupnames)
+    ynew = groupnames[ynew[0]]
     print("newValues = " + str(li))
     return "newvals recieved"
 
@@ -285,25 +290,19 @@ def upload_supcolumns():
 def generate_sup_graph():
     print(supbins)
     supervise(supcol, supbins)
-    global report
     global accuracy
-    global precision
-    global recall
-    global f1
-    report = report()
-    accuracy = accuracy()
-    precision = precision()
-    recall = recall()
-    f1 = f1()
+    try:
+        accuracy = accuracy()
+    except:
+        print("Accuracy already est")
     fig = supplot(supcol)
     filename = "sup.png"
     try:
         os.remove(filename)
     except OSError:
         pass
-
     fig.figure.savefig("sup.png")
-
+    plt.clf()
     return send_file('sup.png', mimetype='image/gif')
 
 # S
@@ -311,18 +310,33 @@ def generate_sup_graph():
 
 @ app.route('/generateGraph', methods=['GET'])
 def generate_graph():
+    print('SE HER!')
+    print(type(strategy))
     print(eval(strategy))
     con = Context(eval(strategy), df)
-
-    fig = con.plot(col1, col2, hue)
-
+    try:
+        hue
+    except NameError:
+        try:
+            col2
+        except NameError:
+            fig = con.plot(col1)
+        else:
+            fig = con.plot(col1, col2)
+    else:
+        fig = con.plot(col1, col2, hue)
+    print(fig)
     filename = "graph.png"
     try:
         os.remove(filename)
     except OSError:
         pass
 
-    fig.figure.savefig("graph.png")
+    if(strategy == "BarStrategy()"):
+        fig.savefig("graph.png")
+    else:
+        fig.figure.savefig("graph.png")
+    plt.clf()
 
     return send_file('graph.png', mimetype='image/gif')
 
@@ -341,7 +355,7 @@ def generate_map():
         pass
 
     geofig.figure.savefig("map.png")
-
+    plt.clf()
     return send_file('map.png', mimetype='image/gif')
 
 
@@ -367,29 +381,9 @@ def get_supcolumns():
     return jsonify(supcolumns)
 
 
-@ app.route('/report', methods=['GET'])
-def get_report():
-    return jsonify(report)
-
-
 @ app.route('/accuracy', methods=['GET'])
 def get_accuracy():
     return jsonify(accuracy)
-
-
-@ app.route('/f1', methods=['GET'])
-def get_f1():
-    return jsonify(f1)
-
-
-@ app.route('/recall', methods=['GET'])
-def get_recall():
-    return jsonify(recall)
-
-
-@ app.route('/precision', methods=['GET'])
-def get_precision():
-    return jsonify(precision)
 
 
 @ app.route('/ynew', methods=['GET'])

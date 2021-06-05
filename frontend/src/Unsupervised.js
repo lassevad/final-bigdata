@@ -207,9 +207,9 @@ class KmeansService extends React.Component {
 
     render() {
         return (
-            <div class="graph">
+            <div class="graph" className="unsupBack">
                 <h4>
-                    Do unsupervised ML (Kmeans)!
+                    Unsupervised ML!
                 </h4>
                 <InputLabel>X Column</InputLabel>
                 <Select

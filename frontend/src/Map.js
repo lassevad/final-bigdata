@@ -244,20 +244,16 @@ class MapService extends React.Component {
 
     render() {
         return (
-            <div class="map">
+            <div class="map" className="mapBack">
                 <h4>
                     Plot a map!
                 </h4>
-                <InputLabel>Map background</InputLabel>
-                <Select
-                    onChange={this.setMap}>
-                    {this.state.mapItems}
-                </Select>
                 <InputLabel>Plot type</InputLabel>
                 <Select
                     onChange={this.setMap}>
                     {this.state.mapItems}
                 </Select>
+
                 <InputLabel>Color maps</InputLabel>
                 <Select
                     onChange={this.setCMap}>

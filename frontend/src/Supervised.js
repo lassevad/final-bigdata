@@ -27,11 +27,7 @@ class GolferService extends React.Component {
             ynew: null
         }
         this.getSupColumns = this.getSupColumns.bind(this)
-        this.getReport = this.getReport.bind(this)
         this.getAccuracy = this.getAccuracy.bind(this)
-        this.getRecall = this.getRecall.bind(this)
-        this.getPrecision = this.getPrecision.bind(this)
-        this.getF1= this.getF1.bind(this)
         this.getYnew= this.getYnew.bind(this)
         this.setBin = this.setBin.bind(this)
         this.setNew = this.setNew.bind(this)
@@ -74,16 +70,6 @@ class GolferService extends React.Component {
                 console.log(response.data)
                 this.setState({
                     supColumns: response.data
-                })
-            })
-    }
-
-    getReport() {
-        return axios.get(API_ROUTE + "/report")
-            .then(response => {
-                console.log(response.data)
-                this.setState({
-                    report: response.data
                 })
             })
     }
@@ -228,9 +214,6 @@ class GolferService extends React.Component {
         await this.uploadBins()
         await this.generateGraph()
         this.getAccuracy()
-        this.getRecall()
-        this.getF1()
-        this.getPrecision()
     } 
 
     async sendNewInfo(){
@@ -245,9 +228,9 @@ class GolferService extends React.Component {
 
     render() {
         return (
-            <div class="graph">
+            <div class="graph" className="supBack">
                 <h4>
-                    Do supervised ML on a golfer!
+                    Supervised ML!
                 </h4>
                 <InputLabel>Attribute to predict</InputLabel>
                 <Select
@@ -266,16 +249,7 @@ class GolferService extends React.Component {
                     </Box>
                 </div>
                 <div>
-                    <Box component="div" display="inline">Accuracy: {this.state.accuracy}</Box>
-                </div>
-                <div>
-                    <Box component="div" display="inline">Precision: {this.state.precision}</Box>
-                </div>
-                <div>
-                    <Box component="div" display="inline">Recall: {this.state.recall}</Box>
-                </div>
-                <div>
-                    <Box component="div" display="inline">F1: {this.state.f1}</Box>
+                    <Box component="div" display="inline" className="Acc">Accuracy: {this.state.accuracy}</Box>
                 </div>
                 <h5>
                     Test with your own statistics!
@@ -287,7 +261,7 @@ class GolferService extends React.Component {
                     </Box>
                 </div>
                 <div>
-                    <Box component="div" display="inline">Your {this.state.selectedSupColName} has the value {this.state.ynew}</Box>
+                    <Box component="div" display="inline">Your {this.state.selectedSupColName} is in the following bin: {this.state.ynew}</Box>
                 </div>
             </div>
         );

@@ -12,7 +12,8 @@ from shapely.geometry import shape
 import geoplot.crs as gcrs
 
 df = pd.read_csv("dataset.csv")
-gdf = gpd.read_file("geodataset.csv", GEOM_POSSIBLE_NAMES="geometry", KEEP_GEOM_COLUMNS="NO") 
+gdf = gpd.read_file(
+    "geodataset.csv", GEOM_POSSIBLE_NAMES="geometry", KEEP_GEOM_COLUMNS="NO")
 
 world_data = gpd.read_file("shapes/world.shp")
 world_data = world_data[["NAME", "geometry"]]
@@ -21,6 +22,7 @@ world_data = world_data[["NAME", "geometry"]]
 class PlotStrategy():
     def plot(self, col1, col2, df, h):
         pass
+
 
 class MapStrategy():
     def geoPlot(self, gdf, h):
@@ -44,7 +46,7 @@ class Context():
     def setDataFrame(self, df):
         self._df = df
 
-    def plot(self, col1, col2, h=None):
+    def plot(self, col1, col2=None, h=None):
         print("Context: Plotting data using the strategy")
         return self._strategy.plot(col1, col2, self.getDataFrame(), h)
 
@@ -78,20 +80,21 @@ class Context():
         pyplot.locator_params(axis='x', nbins=x)
 
     def supervised(self, df, col, fn):
-        X_train, X_test, Y_train, Y_test = train_test_split(df1[fn], df[col], random_state=1)
+        X_train, X_test, Y_train, Y_test = train_test_split(
+            df1[fn], df[col], random_state=1)
         model = GaussianNB()
-        model.fit(X_train,Y_train)
+        model.fit(X_train, Y_train)
         GaussianNB(priors=None)
         Y_pred = model.predict(X_test)
         print(metrics.classification_report(Y_test, Y_pred))
         return metrics.classification_report(Y_test, Y_pred)
 
     def unsupervised(self, df, fn):
-        x = df.iloc[:, [0,1]].values
+        x = df.iloc[:, [0, 1]].values
         kmeans = KMeans(n_clusters=3)
         y_kmeans = kmeans.fit_predict(x)
-        plt.scatter(x[:,0],x[:,1], c=y_kmeans, cmap='rainbow')
-        return plt.scatter(x[:,0],x[:,1], c=y_kmeans, cmap='rainbow')
+        plt.scatter(x[:, 0], x[:, 1], c=y_kmeans, cmap='rainbow')
+        return plt.scatter(x[:, 0], x[:, 1], c=y_kmeans, cmap='rainbow')
 
     def regression(self, df, fn):
 
@@ -103,11 +106,12 @@ class Context():
         Y_pred = lr.predict(X_test)
         r_sq = lr.score(X_train, Y_train)
 
-        plt.scatter(X_test, Y_test, color = "green")
-        plt.plot(X_test, Y_pred, color = "Red")
+        plt.scatter(X_test, Y_test, color="green")
+        plt.plot(X_test, Y_pred, color="Red")
         plt.show()
         print('coefficient of determination:', r_sq)
         return r_sq
+
 
 class MapContext():
     def __init__(self, mapstrategy: MapStrategy, gdf):
@@ -138,7 +142,7 @@ class ScatterStrategy(PlotStrategy):
 
 class ScatterRegStrategy(PlotStrategy):
     def plot(self, col1, col2, df, h):
-        return sns.regplot(x=col1, y=col2, data=df, fit_reg=True, line_kws={'color': 'red'}).set(xlim=(0, 21))
+        return sns.regplot(x=col1, y=col2, data=df, fit_reg=True, line_kws={'color': 'red'})
 
 
 class LineStrategy(PlotStrategy):
@@ -153,22 +157,17 @@ class BarStrategy(PlotStrategy):
 
 class HistStrategy(PlotStrategy):
     def plot(self, col1, col2, df, h):
-        return sns.histplot(df, x=col1, y=col2, hue=h, multiple="stack", palette="light:m_r")
-
-
-class CorrelogramStrategy(PlotStrategy):
-    def plot(self, col1, col2, df, h):
-        return sns.pairplot(df, hue=h)
+        return sns.histplot(df, x=col1, multiple="stack", palette="light:m_r")
 
 
 class BoxStrategy(PlotStrategy):
     def plot(self, col1, col2, df, h):
-        return sns.boxplot(data=df, x=col1, y=col2, hue=h)
+        return sns.boxplot(data=df, x=col1)
 
 
 class DensityStrategy(PlotStrategy):
     def plot(self, col1, col2, df, h):
-        return sns.kdeplot(data=df, x=col1, y=col2, hue=h)
+        return sns.kdeplot(data=df, x=col1, y=col2, hue=h, fill=True)
 
 
 class ViolinStrategy(PlotStrategy):
@@ -177,28 +176,37 @@ class ViolinStrategy(PlotStrategy):
 
 
 # Geo Map strategies
-class WebmapStrategy(MapStrategy):
+class PointStrategy(MapStrategy):
     def geoPlot(self, gdf, h, cmap):
-        ax = gplt.webmap(world_data, figsize=(15,10), projection=gcrs.WebMercator())
+        ax = gplt.webmap(world_data, figsize=(15, 10),
+                         projection=gcrs.WebMercator())
         return gplt.pointplot(gdf, ax=ax, hue=h, cmap=cmap)
 
+
+"""
 class PolymapStrategy(MapStrategy):
     def geoPlot(self, gdf, h, cmap):
-        ax = gplt.polyplot(world_data, figsize=(15,10), projection=gcrs.WebMercator())
+        ax = gplt.polyplot(world_data, figsize=(15, 10),
+                           projection=gcrs.WebMercator())
         return gplt.pointplot(gdf, ax=ax, hue=h, cmap=cmap)
+"""
+
 
 class KdeStrategy(MapStrategy):
     def geoPlot(self, gdf, h, cmap):
-        ax = gplt.polyplot(world_data, figsize=(15,10), projection=gcrs.WebMercator())
-        return gplt.kdeplot(gdf, ax=ax, hue=h, cmap=cmap)
+        ax = gplt.webmap(world_data, figsize=(15, 10),
+                         projection=gcrs.WebMercator())
+        return gplt.kdeplot(gdf, ax=ax, cmap=cmap)
+
 
 class ChoroplethStrategy(MapStrategy):
     def geoPlot(self, gdf, h, cmap):
-        ax = gplt.polyplot(world_data, figsize=(15,10), projection=gcrs.WebMercator())
+        ax = gplt.webmap(world_data, figsize=(15, 10),
+                         projection=gcrs.WebMercator())
         return gplt.choropleth(gdf, ax=ax, hue=h, cmap=cmap, legend=True)
 
 
-#if __name__ == "__main__":
+# if __name__ == "__main__":
 
     #pga.removeCharFromColumn(',', "Money")
     #pga.removeCharFromColumn('$', "Money")
@@ -208,4 +216,4 @@ class ChoroplethStrategy(MapStrategy):
 
     #con = Context(app.strategy, df)
     #fig = con.plot(app.col1, app.col2, app.hue)
-    #fig.savefig("graph.png")
+    # fig.savefig("graph.png")

@@ -27,21 +27,16 @@
         },
         {
             "id": "6",
-            "name": "Correlogram",
-            "value": "CorrelogramStrategy()"
-        },
-        {
-            "id": "7",
             "name": "Box",
             "value": "BoxStrategy()"
         },
         {
-            "id": "8",
+            "id": "7",
             "name": "Density",
             "value": "DensityStrategy()"
         },
         {
-            "id": "9",
+            "id": "8",
             "name": "Violin",
             "value": "ViolinStrategy()"
         }
